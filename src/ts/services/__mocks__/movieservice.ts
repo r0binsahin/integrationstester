@@ -37,8 +37,7 @@ export const getData = async (): Promise<IMovie[]> => {
 
     if (searchText !== "") resolve(mockData);
     else {
-      reject("Skriv in ett ord för att söka");
-      return [];
+      reject();
     }
   });
 };

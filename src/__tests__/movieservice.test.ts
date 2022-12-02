@@ -11,25 +11,45 @@ import { mockData } from "../ts/services/__mocks__/movieservice";
 
 jest.mock("axios", () => ({
   get: async () => {
-    return new Promise((resolve) => {
-      resolve({
-        data: {
-          Search: mockData,
-        },
-      });
+    return new Promise((resolve, reject) => {
+      let searchText: string = "hej";
+      if (searchText) {
+        resolve({
+          data: {
+            Search: mockData,
+          },
+        });
+      } else reject("inget hittades");
     });
   },
 }));
 
-test("Should get mock data", async () => {
-  //arrange
-  let searchText: string = "hej";
+describe("getData", () => {
+  beforeEach(() => {
+    jest.resetModules();
+    jest.restoreAllMocks();
+  });
+  test("Should get mock data", async () => {
+    //arrange
+    let searchText: string = "hej";
 
-  //act
-  let response: IMovie[] = await getData(searchText);
+    //act
+    let response: IMovie[] = await getData(searchText);
 
-  //assert
+    //assert
 
-  expect(response.length).toBe(4);
-  expect(response[0].Title).toBe("Harry Zotter 1");
+    expect(response.length).toBe(4);
+    expect(response[0].Title).toBe("Harry Zotter 1");
+  });
+
+  test("should not get mackData", async () => {
+    //arrange
+    let searchText: string = "";
+    //act
+    try {
+      await getData(searchText);
+    } catch (response: any) {
+      expect(response.length).toBe(0);
+    }
+  });
 });
